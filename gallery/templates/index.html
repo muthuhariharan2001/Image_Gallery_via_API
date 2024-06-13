@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        #searchForm {
+            margin: 20px 0;
+            text-align: center;
+        }
+        #searchForm input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        #imageGallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .imageCard {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .imageCard:hover {
+            box-shadow: -3px -3px 5px 5px #c4c4c4;
+            transition: box-shadow 0.5s;
+        }
+        .imageCard img {
+            width: 100%;
+            height: auto;
+        }
+        .imageCard p {
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Gallery</h1>
+        <div id="searchForm">
+            <input type="text" id="searchInput" placeholder="Search for images...">
+            <button onclick="searchImages()">Search</button>
+        </div>
+        <div id="imageGallery"></div>
+    </div>
+
+    <script>
+        function searchImages() {
+            const query = document.getElementById('searchInput').value;
+            fetch(`/search/?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const gallery = document.getElementById('imageGallery');
+                    gallery.innerHTML = '';
+                    data.forEach(image => {
+                        const imageCard = document.createElement('div');
+                        imageCard.className = 'imageCard';
+                        imageCard.innerHTML = `
+                            <img src="${image.url}" alt="${image.description}">
+                            <p>${image.description}</p>
+                        `;
+                        gallery.appendChild(imageCard);
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
